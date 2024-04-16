@@ -24,7 +24,7 @@ public interface StorageFacilitiesRepository extends CrudRepository<StorageFacil
             "WHERE batteryTierId = :batteryTier " +
             "   AND usage < capacity " +
             "ORDER BY id ASC")
-    int getAvailStorageForTier(@Param("batteryTier")int batteryTier);
+    int getAvailStorageForTier(@Param("batteryTier") int batteryTier);
 
     @Transactional
     @Modifying

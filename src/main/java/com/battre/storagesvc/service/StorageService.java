@@ -33,13 +33,13 @@ public class StorageService {
     @Transactional
     public boolean checkStorageAndAttemptStore(StoreBatteryRequest incomingRequest) throws InsufficientStorageSpaceException {
         Map<Integer, Integer> reqStoragePerTierMap = calculateReqStoragePerTier(incomingRequest.getBatteriesList());
-        if(checkStorage(reqStoragePerTierMap)) {
+        if (checkStorage(reqStoragePerTierMap)) {
             // update all tiers storage space
-            for(BatteryStorageInfo battery:incomingRequest.getBatteriesList()) {
+            for (BatteryStorageInfo battery : incomingRequest.getBatteriesList()) {
                 // find storage facility with unused capacity and lowest facility id
                 int storageFacilityId = storageFacRepo.getAvailStorageForTier(battery.getBatteryTier());
-                logger.info("For battery ["+battery.getBatteryId()
-                        +"] tier ["+battery.getBatteryTier()+"] => Storing in ["+storageFacilityId+"]");
+                logger.info("For battery [" + battery.getBatteryId()
+                        + "] tier [" + battery.getBatteryTier() + "] => Storing in [" + storageFacilityId + "]");
 
                 // increase usage for that facility
                 storageFacRepo.incrementStorageFacilityUsage(storageFacilityId);
@@ -65,9 +65,9 @@ public class StorageService {
         Map<Integer, Integer> unusedStoragePerTierMap = convertObjectArrayToMap(unusedStoragePerTierList);
 
         // check the unused storage space for each battery tier
-        for(int tier:reqStoragePerTierMap.keySet()) {
+        for (int tier : reqStoragePerTierMap.keySet()) {
             // if the storage for an incoming battery tier doesn't exist or is insufficient => exception
-            if(!unusedStoragePerTierMap.containsKey(tier)
+            if (!unusedStoragePerTierMap.containsKey(tier)
                     || unusedStoragePerTierMap.get(tier) < reqStoragePerTierMap.get(tier)) {
                 logger.info("Storage facilities do not contain enough space in specified battery tier [" + tier + "]");
                 throw new InsufficientStorageSpaceException(tier);
@@ -80,9 +80,9 @@ public class StorageService {
     private Map<Integer, Integer> calculateReqStoragePerTier(List<BatteryStorageInfo> batteryInfoList) {
         Map<Integer, Integer> reqStoragePerTier = new HashMap<>();
 
-        for(BatteryStorageInfo battery:batteryInfoList) {
+        for (BatteryStorageInfo battery : batteryInfoList) {
             int tier = battery.getBatteryTier();
-            if(!reqStoragePerTier.containsKey(tier)) {
+            if (!reqStoragePerTier.containsKey(tier)) {
                 reqStoragePerTier.put(tier, 0);
             }
             reqStoragePerTier.put(tier, reqStoragePerTier.get(tier) + 1);
