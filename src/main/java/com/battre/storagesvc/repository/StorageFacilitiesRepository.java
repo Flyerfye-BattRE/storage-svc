@@ -3,7 +3,7 @@ package com.battre.storagesvc.repository;
 import com.battre.storagesvc.model.StorageFacilityType;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface StorageFacilitiesRepository extends CrudRepository<StorageFacilityType, Integer> {
+public interface StorageFacilitiesRepository extends JpaRepository<StorageFacilityType, Integer> {
     @Query("SELECT batteryTierId, SUM(capacity) - SUM(usage) as unused_storage " +
             "FROM StorageFacilityType " +
             "GROUP BY batteryTierId " +

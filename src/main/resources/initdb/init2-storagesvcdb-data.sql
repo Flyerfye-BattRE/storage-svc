@@ -1,5 +1,5 @@
 -- Insert statements for the "StorageFacilities" table
-INSERT INTO StorageSvcDb.StorageFacilities (storage_facility_id, location, battery_tier_id, capacity, usage, notes) VALUES
+INSERT INTO StorageSvcSchema.StorageFacilities (storage_facility_id, location, battery_tier_id, capacity, usage, notes) VALUES
 (1, 'Main Storage', 1, 50, 0, ''),
 (2, 'Main Storage', 4, 30, 0, ''),
 (3, 'Main Storage', 2, 20, 0, ''),

@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "StorageRecords", schema = "StorageSvcDb")
+@Table(name = "StorageRecords", schema = "StorageSvcSchema")
 public class StorageRecordType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
