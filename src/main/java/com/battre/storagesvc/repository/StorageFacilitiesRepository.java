@@ -12,22 +12,34 @@ import java.util.List;
 
 @Repository
 public interface StorageFacilitiesRepository extends JpaRepository<StorageFacilityType, Integer> {
-    @Query("SELECT batteryTierId, SUM(capacity) - SUM(usage) as unused_storage " +
+    @Query("SELECT batteryTierId, SUM(capacity) - SUM(usage) as avail_storage " +
             "FROM StorageFacilityType " +
             "GROUP BY batteryTierId " +
             "ORDER BY batteryTierId")
-    List<Object[]> getUnusedStoragePerTier();
+    List<Object[]> getAvailStorageForAllTiers();
 
+    @Query("SELECT SUM(capacity) - SUM(usage) as avail_storage " +
+            "FROM StorageFacilityType " +
+            "WHERE batteryTierId = :batteryTier " +
+            "GROUP BY batteryTierId " +
+            "ORDER BY batteryTierId")
+    int getAvailStorageForTier(@Param("batteryTier") int batteryTier);
 
     @Query("SELECT id " +
             "FROM StorageFacilityType " +
             "WHERE batteryTierId = :batteryTier " +
             "   AND usage < capacity " +
-            "ORDER BY id ASC")
-    int getAvailStorageForTier(@Param("batteryTier") int batteryTier);
+            "ORDER BY id ASC " +
+            "LIMIT 1")
+    int getAvailStorageIdForTier(@Param("batteryTier") int batteryTier);
 
     @Transactional
     @Modifying
     @Query("UPDATE StorageFacilityType SET usage = usage + 1 WHERE id = :storageFacilityId")
     void incrementStorageFacilityUsage(@Param("storageFacilityId") int storageFacilityId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE StorageFacilityType SET usage = usage - 1 WHERE id = :storageFacilityId")
+    void decrementStorageFacilityUsage(@Param("storageFacilityId") int storageFacilityId);
 }
