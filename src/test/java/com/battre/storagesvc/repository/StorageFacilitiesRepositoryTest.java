@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.battre.storagesvc.service.StorageService.convertToStorageForAllTiersMap;
+import static com.battre.storagesvc.service.StorageSvc.convertToStorageForAllTiersMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

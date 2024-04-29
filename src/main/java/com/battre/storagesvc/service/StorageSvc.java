@@ -16,22 +16,22 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
-public class StorageService {
-    private static final Logger logger = Logger.getLogger(StorageService.class.getName());
+public class StorageSvc {
+    private static final Logger logger = Logger.getLogger(StorageSvc.class.getName());
 
     private final StorageFacilitiesRepository storageFacRepo;
     private final StorageRecordsRepository storageRecRepo;
 
     @Autowired
-    public StorageService(StorageFacilitiesRepository storageFacRepo,
-                          StorageRecordsRepository storageRecRepo) {
+    public StorageSvc(StorageFacilitiesRepository storageFacRepo,
+                      StorageRecordsRepository storageRecRepo) {
         this.storageFacRepo = storageFacRepo;
         this.storageRecRepo = storageRecRepo;
     }
 
 
     @Transactional
-    public boolean checkStorageAndAttemptStore(StoreBatteryRequest incomingRequest) throws InsufficientStorageSpaceException {
+    public boolean checkStorageAndAttemptStore(StoreBatteryRequest incomingRequest) {
         Map<Integer, Integer> reqStorageForAllTiersMap = calculateReqStorageForAllTiers(incomingRequest.getBatteriesList());
         if (checkStorage(reqStorageForAllTiersMap)) {
             // update all tiers storage space
@@ -60,7 +60,7 @@ public class StorageService {
         return true;
     }
 
-    private boolean checkStorage(Map<Integer, Integer> reqStorageForAllTiersMap) throws InsufficientStorageSpaceException {
+    private boolean checkStorage(Map<Integer, Integer> reqStorageForAllTiersMap) {
         List<Object[]> availStorageForAllTiersList = storageFacRepo.getAvailStorageForAllTiers();
         Map<Integer, Integer> availStorageForAllTiersMap = convertToStorageForAllTiersMap(availStorageForAllTiersList);
 
@@ -70,7 +70,7 @@ public class StorageService {
             if (!availStorageForAllTiersMap.containsKey(tier)
                     || availStorageForAllTiersMap.get(tier) < reqStorageForAllTiersMap.get(tier)) {
                 logger.info("Storage facilities do not contain enough space in specified battery tier [" + tier + "]");
-                throw new InsufficientStorageSpaceException(tier);
+                return false;
             }
         }
 
@@ -98,16 +98,5 @@ public class StorageService {
                         arr -> (Integer) arr[0],   // Extract the battery tier id
                         arr -> ((Long) arr[1]).intValue()    // Extract the avail storage value
                 ));
-    }
-
-    public class InsufficientStorageSpaceException extends Exception {
-
-        public InsufficientStorageSpaceException() {
-            super("Storage facilities do not contain enough space in specified battery tier");
-        }
-
-        public InsufficientStorageSpaceException(int tier) {
-            super("Storage facilities do not contain enough space in specified battery tier [" + tier + "]");
-        }
     }
 }

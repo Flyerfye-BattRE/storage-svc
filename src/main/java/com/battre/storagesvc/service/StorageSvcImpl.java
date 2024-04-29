@@ -13,11 +13,11 @@ import java.util.logging.Logger;
 public class StorageSvcImpl extends StorageSvcGrpc.StorageSvcImplBase {
     private static final Logger logger = Logger.getLogger(StorageSvcImpl.class.getName());
 
-    private final StorageService storageService;
+    private final StorageSvc storageSvc;
 
     @Autowired
-    public StorageSvcImpl(StorageService storageService) {
-        this.storageService = storageService;
+    public StorageSvcImpl(StorageSvc storageSvc) {
+        this.storageSvc = storageSvc;
     }
 
     @Override
@@ -27,12 +27,7 @@ public class StorageSvcImpl extends StorageSvcGrpc.StorageSvcImplBase {
 
         boolean storageSuccess = false;
 
-        try {
-            storageSuccess = storageService.checkStorageAndAttemptStore(request);
-        } catch (StorageService.InsufficientStorageSpaceException e) {
-            storageSuccess = false;
-        }
-
+        storageSuccess = storageSvc.checkStorageAndAttemptStore(request);
         StoreBatteryResponse response = StoreBatteryResponse.newBuilder()
                 .setSuccess(storageSuccess)
                 .build();
