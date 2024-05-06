@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,6 @@ public class StorageSvc {
         this.storageFacRepo = storageFacRepo;
         this.storageRecRepo = storageRecRepo;
     }
-
 
     @Transactional
     public boolean checkStorageAndAttemptStore(StoreBatteryRequest incomingRequest) {
@@ -90,6 +91,14 @@ public class StorageSvc {
         }
 
         return reqStorageForAllTiers;
+    }
+
+    @Transactional
+    public boolean removeBattery(int batteryId) {
+        storageFacRepo.decrementStorageFacilityUsageForBatteryId(batteryId);
+        storageRecRepo.endStorageForBatteryId(batteryId, Timestamp.from(Instant.now()));
+
+        return true;
     }
 
     public static Map<Integer, Integer> convertToStorageForAllTiersMap(List<Object[]> list) {

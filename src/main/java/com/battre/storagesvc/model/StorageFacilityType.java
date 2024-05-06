@@ -13,7 +13,7 @@ public class StorageFacilityType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "storage_facility_id")
-    private Long id;
+    private Long storageFacilityId;
 
     @Column(name = "location")
     private String location;
@@ -38,36 +38,20 @@ public class StorageFacilityType {
         this.notes = notes;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public Long getStorageFacilityId() {
+        return storageFacilityId;
     }
 
     public String getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public Integer getBatteryTierId() {
         return batteryTierId;
     }
-
-    public void setBatteryTierId(Integer batteryTierId) {
-        this.batteryTierId = batteryTierId;
-    }
-
+	
     public Integer getCapacity() {
         return capacity;
-    }
-
-    public void setCapacity(Integer capacity) {
-        this.capacity = capacity;
     }
 
     public Integer getUsage() {

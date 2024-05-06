@@ -16,7 +16,7 @@ public class StorageRecordType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "storage_id")
-    private Long id;
+    private Long storageId;
 
     @Column(name = "storage_facility_id")
     private Integer storageFacilityId;
@@ -27,25 +27,21 @@ public class StorageRecordType {
     @Column(name = "intake_order_id")
     private Integer intakeOrderId;
 
-    @Column(name = "storage_start")
-    private Timestamp storageStart;
+    @Column(name = "storage_start_date")
+    private Timestamp storageStartDate;
 
-    @Column(name = "storage_end")
-    private Timestamp storageEnd;
+    @Column(name = "storage_end_date")
+    private Timestamp storageEndDate;
 
     public StorageRecordType(Integer storageFacilityId, Integer batteryId, Integer intakeOrderId) {
         this.storageFacilityId = storageFacilityId;
         this.batteryId = batteryId;
         this.intakeOrderId = intakeOrderId;
-        this.storageStart = Timestamp.from(Instant.now());
+        this.storageStartDate = Timestamp.from(Instant.now());
     }
 
     public Integer getStorageFacilityId() {
         return storageFacilityId;
-    }
-
-    public void setStorageFacilityId(Integer storageFacilityId) {
-        this.storageFacilityId = storageFacilityId;
     }
 
     public Integer getBatteryId() {
@@ -64,19 +60,19 @@ public class StorageRecordType {
         this.intakeOrderId = intakeOrderId;
     }
 
-    public Timestamp getStorageStart() {
-        return storageStart;
+    public Timestamp getStorageStartDate() {
+        return storageStartDate;
     }
 
-    public void setStorageStart(Timestamp storageStart) {
-        this.storageStart = storageStart;
+    public void setStorageStartDate(Timestamp StorageStartDate) {
+        this.storageStartDate = StorageStartDate;
     }
 
-    public Timestamp getStorageEnd() {
-        return storageEnd;
+    public Timestamp getStorageEndDate() {
+        return storageEndDate;
     }
 
-    public void setStorageEnd(Timestamp storageEnd) {
-        this.storageEnd = storageEnd;
+    public void setStorageEndDate(Timestamp StorageEndDate) {
+        this.storageEndDate = StorageEndDate;
     }
 }

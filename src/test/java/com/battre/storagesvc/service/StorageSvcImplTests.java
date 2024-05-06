@@ -61,5 +61,4 @@ public class StorageSvcImplTests {
         verify(responseStoreBatteryResponse).onNext(StoreBatteryResponse.newBuilder().setSuccess(false).build());
         verify(responseStoreBatteryResponse).onCompleted();
     }
-}
-
+}

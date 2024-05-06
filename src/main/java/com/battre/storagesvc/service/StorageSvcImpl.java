@@ -1,5 +1,7 @@
 package com.battre.storagesvc.service;
 
+import com.battre.stubs.services.RemoveBatteryRequest;
+import com.battre.stubs.services.RemoveBatteryResponse;
 import com.battre.stubs.services.StorageSvcGrpc;
 import com.battre.stubs.services.StoreBatteryRequest;
 import com.battre.stubs.services.StoreBatteryResponse;
@@ -36,6 +38,24 @@ public class StorageSvcImpl extends StorageSvcGrpc.StorageSvcImplBase {
         responseObserver.onCompleted();
 
         logger.info("tryStoreBatteries() finished");
+    }
+
+    @Override
+    public void removeBattery(RemoveBatteryRequest request, StreamObserver<RemoveBatteryResponse> responseObserver) {
+        int batteryId = request.getBatteryId();
+        logger.info("removeBattery() invoked for [" + batteryId + "]");
+
+        boolean removeBatterySuccess = false;
+
+        removeBatterySuccess = storageSvc.removeBattery(batteryId);
+        RemoveBatteryResponse response = RemoveBatteryResponse.newBuilder()
+                .setSuccess(removeBatterySuccess)
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+
+        logger.info("removeBattery() finished");
     }
 
 }

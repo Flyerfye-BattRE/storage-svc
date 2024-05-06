@@ -25,7 +25,7 @@ public interface StorageFacilitiesRepository extends JpaRepository<StorageFacili
             "ORDER BY batteryTierId")
     int getAvailStorageForTier(@Param("batteryTier") int batteryTier);
 
-    @Query("SELECT id " +
+    @Query("SELECT storageFacilityId " +
             "FROM StorageFacilityType " +
             "WHERE batteryTierId = :batteryTier " +
             "   AND usage < capacity " +
@@ -35,11 +35,22 @@ public interface StorageFacilitiesRepository extends JpaRepository<StorageFacili
 
     @Transactional
     @Modifying
-    @Query("UPDATE StorageFacilityType SET usage = usage + 1 WHERE id = :storageFacilityId")
+    @Query("UPDATE StorageFacilityType SET usage = usage + 1 WHERE storageFacilityId = :storageFacilityId")
     void incrementStorageFacilityUsage(@Param("storageFacilityId") int storageFacilityId);
 
     @Transactional
     @Modifying
-    @Query("UPDATE StorageFacilityType SET usage = usage - 1 WHERE id = :storageFacilityId")
+    @Query("UPDATE StorageFacilityType SET usage = usage - 1 WHERE storageFacilityId = :storageFacilityId")
     void decrementStorageFacilityUsage(@Param("storageFacilityId") int storageFacilityId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE StorageFacilityType " +
+            "SET usage = usage - 1 " +
+            "WHERE storageFacilityId = (" +
+                "SELECT storageFacilityId " +
+                "FROM StorageRecordType " +
+                "WHERE batteryId = :batteryId" +
+            ") ")
+    void decrementStorageFacilityUsageForBatteryId(@Param("batteryId") int batteryId);
 }
