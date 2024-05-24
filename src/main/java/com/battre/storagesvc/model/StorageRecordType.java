@@ -19,7 +19,7 @@ public class StorageRecordType {
     private Long storageId;
 
     @Column(name = "storage_facility_id")
-    private Integer storageFacilityId;
+    private final Integer storageFacilityId;
 
     @Column(name = "battery_id")
     private Integer batteryId;

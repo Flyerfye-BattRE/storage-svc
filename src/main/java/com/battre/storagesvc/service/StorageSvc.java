@@ -31,6 +31,14 @@ public class StorageSvc {
         this.storageRecRepo = storageRecRepo;
     }
 
+    public static Map<Integer, Integer> convertToStorageForAllTiersMap(List<Object[]> list) {
+        return list.stream()
+                .collect(Collectors.toMap(
+                        arr -> (Integer) arr[0],   // Extract the battery tier id
+                        arr -> ((Long) arr[1]).intValue()    // Extract the avail storage value
+                ));
+    }
+
     @Transactional
     public boolean checkStorageAndAttemptStore(StoreBatteryRequest incomingRequest) {
         Map<Integer, Integer> reqStorageForAllTiersMap = calculateReqStorageForAllTiers(incomingRequest.getBatteriesList());
@@ -99,13 +107,5 @@ public class StorageSvc {
         storageRecRepo.endStorageForBatteryId(batteryId, Timestamp.from(Instant.now()));
 
         return true;
-    }
-
-    public static Map<Integer, Integer> convertToStorageForAllTiersMap(List<Object[]> list) {
-        return list.stream()
-                .collect(Collectors.toMap(
-                        arr -> (Integer) arr[0],   // Extract the battery tier id
-                        arr -> ((Long) arr[1]).intValue()    // Extract the avail storage value
-                ));
     }
 }

@@ -1,5 +1,6 @@
-package com.battre.storagesvc.service;
+package com.battre.storagesvc.controller;
 
+import com.battre.storagesvc.service.StorageSvc;
 import com.battre.stubs.services.RemoveBatteryRequest;
 import com.battre.stubs.services.RemoveBatteryResponse;
 import com.battre.stubs.services.StorageSvcGrpc;
@@ -12,13 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.logging.Logger;
 
 @GrpcService
-public class StorageSvcImpl extends StorageSvcGrpc.StorageSvcImplBase {
-    private static final Logger logger = Logger.getLogger(StorageSvcImpl.class.getName());
+public class StorageSvcController extends StorageSvcGrpc.StorageSvcImplBase {
+    private static final Logger logger = Logger.getLogger(StorageSvcController.class.getName());
 
     private final StorageSvc storageSvc;
 
     @Autowired
-    public StorageSvcImpl(StorageSvc storageSvc) {
+    public StorageSvcController(StorageSvc storageSvc) {
         this.storageSvc = storageSvc;
     }
 

@@ -16,13 +16,13 @@ public class StorageFacilityType {
     private Long storageFacilityId;
 
     @Column(name = "location")
-    private String location;
+    private final String location;
 
     @Column(name = "battery_tier_id")
-    private Integer batteryTierId;
+    private final Integer batteryTierId;
 
     @Column(name = "capacity")
-    private Integer capacity;
+    private final Integer capacity;
 
     @Column(name = "usage")
     private Integer usage;
@@ -49,7 +49,7 @@ public class StorageFacilityType {
     public Integer getBatteryTierId() {
         return batteryTierId;
     }
-	
+
     public Integer getCapacity() {
         return capacity;
     }
