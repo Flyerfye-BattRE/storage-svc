@@ -19,5 +19,5 @@ CREATE TABLE IF NOT EXISTS StorageSvcSchema.StorageRecords (
   intake_order_id INT NOT NULL,
   storage_start_date TIMESTAMP NOT NULL,
   storage_end_date TIMESTAMP,
-  CONSTRAINT storage_facility_id FOREIGN KEY (storage_facility_id) REFERENCES StorageSvcSchema.StorageFacilities(storage_facility_id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT storage_facility_id_fk FOREIGN KEY (storage_facility_id) REFERENCES StorageFacilities(storage_facility_id) ON DELETE NO ACTION ON UPDATE NO ACTION
 );

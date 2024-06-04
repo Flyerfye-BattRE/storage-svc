@@ -1,6 +1,6 @@
-package com.battre.storagesvc.service;
+package com.battre.storagesvc.controller;
 
-import com.battre.storagesvc.controller.StorageSvcController;
+import com.battre.storagesvc.service.StorageSvc;
 import com.battre.stubs.services.StoreBatteryRequest;
 import com.battre.stubs.services.StoreBatteryResponse;
 import io.grpc.stub.StreamObserver;
@@ -61,5 +61,15 @@ public class StorageSvcControllerTests {
         verify(storageSvc).checkStorageAndAttemptStore(request);
         verify(responseStoreBatteryResponse).onNext(StoreBatteryResponse.newBuilder().setSuccess(false).build());
         verify(responseStoreBatteryResponse).onCompleted();
+    }
+
+    @Test
+    void testRemoveStorageBattery() {
+        // TODO: Implement test
+    }
+
+    @Test
+    void testGetStorageStats() {
+        // TODO: Implement test
     }
 }

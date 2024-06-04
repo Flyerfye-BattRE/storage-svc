@@ -1,15 +1,19 @@
 package com.battre.storagesvc.controller;
 
 import com.battre.storagesvc.service.StorageSvc;
-import com.battre.stubs.services.RemoveBatteryRequest;
-import com.battre.stubs.services.RemoveBatteryResponse;
+import com.battre.stubs.services.GetStorageStatsRequest;
+import com.battre.stubs.services.GetStorageStatsResponse;
+import com.battre.stubs.services.RemoveStorageBatteryRequest;
+import com.battre.stubs.services.RemoveStorageBatteryResponse;
 import com.battre.stubs.services.StorageSvcGrpc;
 import com.battre.stubs.services.StoreBatteryRequest;
 import com.battre.stubs.services.StoreBatteryResponse;
+import com.battre.stubs.services.TierStats;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 @GrpcService
@@ -42,14 +46,14 @@ public class StorageSvcController extends StorageSvcGrpc.StorageSvcImplBase {
     }
 
     @Override
-    public void removeBattery(RemoveBatteryRequest request, StreamObserver<RemoveBatteryResponse> responseObserver) {
+    public void removeStorageBattery(RemoveStorageBatteryRequest request, StreamObserver<RemoveStorageBatteryResponse> responseObserver) {
         int batteryId = request.getBatteryId();
         logger.info("removeBattery() invoked for [" + batteryId + "]");
 
         boolean removeBatterySuccess = false;
 
         removeBatterySuccess = storageSvc.removeBattery(batteryId);
-        RemoveBatteryResponse response = RemoveBatteryResponse.newBuilder()
+        RemoveStorageBatteryResponse response = RemoveStorageBatteryResponse.newBuilder()
                 .setSuccess(removeBatterySuccess)
                 .build();
 
@@ -59,4 +63,26 @@ public class StorageSvcController extends StorageSvcGrpc.StorageSvcImplBase {
         logger.info("removeBattery() finished");
     }
 
+    @Override
+    public void getStorageStats(GetStorageStatsRequest request, StreamObserver<GetStorageStatsResponse> responseObserver) {
+        logger.info("getStorageStats() invoked");
+
+        List<List<Integer>> storageStats = storageSvc.getStorageStats();
+
+        GetStorageStatsResponse.Builder responseBuilder = GetStorageStatsResponse.newBuilder();
+        for (List<Integer> tierStats : storageStats) {
+            TierStats.Builder tierStatsBuilder = TierStats.newBuilder()
+                    .setBatteryTierId(tierStats.get(0))
+                    .setAvailStorage(tierStats.get(1))
+                    .setCapacity(tierStats.get(2));
+
+            responseBuilder.addTierStatsList(tierStatsBuilder.build());
+        }
+
+        GetStorageStatsResponse response = responseBuilder.build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+
+        logger.info("getStorageStats() finished");
+    }
 }

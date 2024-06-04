@@ -59,7 +59,7 @@ public class StorageSvcTests {
 
         // checkStorage
         List<Object[]> availStorage = List.of(new Object[]{1, 2L}, new Object[]{2, 4L}, new Object[]{3, 1L});
-        doReturn(availStorage).when(storageFacRepo).getAvailStorageForAllTiers();
+        doReturn(availStorage).when(storageFacRepo).getStorageStatsForAllTiers();
 
         doReturn(3).when(storageFacRepo).getAvailStorageIdForTier(1);
         doReturn(5).when(storageFacRepo).getAvailStorageIdForTier(2);
@@ -103,7 +103,7 @@ public class StorageSvcTests {
 
         // checkStorage
         List<Object[]> availStorage = List.of(new Object[]{3, 2L}, new Object[]{4, 1L});
-        doReturn(availStorage).when(storageFacRepo).getAvailStorageForAllTiers();
+        doReturn(availStorage).when(storageFacRepo).getStorageStatsForAllTiers();
 
         boolean result = storageSvc.checkStorageAndAttemptStore(incomingRequest);
         assertFalse(result);
@@ -125,9 +125,19 @@ public class StorageSvcTests {
 
         // checkStorage
         List<Object[]> availStorage = List.of(new Object[]{3, 2L}, new Object[]{4, 1L});
-        doReturn(availStorage).when(storageFacRepo).getAvailStorageForAllTiers();
+        doReturn(availStorage).when(storageFacRepo).getStorageStatsForAllTiers();
 
         boolean result = storageSvc.checkStorageAndAttemptStore(incomingRequest);
         assertFalse(result);
+    }
+
+    @Test
+    public void testGetStorageStats() {
+        // TODO: Implement test
+    }
+
+    @Test
+    public void testRemoveBattery() {
+        // TODO: Implement test
     }
 }

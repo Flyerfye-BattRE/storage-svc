@@ -12,13 +12,13 @@ import java.util.List;
 
 @Repository
 public interface StorageFacilitiesRepository extends JpaRepository<StorageFacilityType, Integer> {
-    @Query("SELECT batteryTierId, SUM(capacity) - SUM(usage) as avail_storage " +
+    @Query("SELECT batteryTierId, SUM(capacity) - SUM(usage) as availStorage, SUM(capacity) as totalCapacity " +
             "FROM StorageFacilityType " +
             "GROUP BY batteryTierId " +
             "ORDER BY batteryTierId")
-    List<Object[]> getAvailStorageForAllTiers();
+    List<Object[]> getStorageStatsForAllTiers();
 
-    @Query("SELECT SUM(capacity) - SUM(usage) as avail_storage " +
+    @Query("SELECT SUM(capacity) - SUM(usage) as availStorage " +
             "FROM StorageFacilityType " +
             "WHERE batteryTierId = :batteryTier " +
             "GROUP BY batteryTierId " +

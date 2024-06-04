@@ -13,14 +13,12 @@ import java.time.Instant;
 @Entity
 @Table(name = "StorageRecords", schema = "StorageSvcSchema")
 public class StorageRecordType {
+    @Column(name = "storage_facility_id")
+    private final Integer storageFacilityId;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "storage_id")
     private Long storageId;
-
-    @Column(name = "storage_facility_id")
-    private final Integer storageFacilityId;
-
     @Column(name = "battery_id")
     private Integer batteryId;
 

@@ -10,20 +10,16 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "StorageFacilities", schema = "StorageSvcSchema")
 public class StorageFacilityType {
+    @Column(name = "location")
+    private final String location;
+    @Column(name = "battery_tier_id")
+    private final Integer batteryTierId;
+    @Column(name = "capacity")
+    private final Integer capacity;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "storage_facility_id")
     private Long storageFacilityId;
-
-    @Column(name = "location")
-    private final String location;
-
-    @Column(name = "battery_tier_id")
-    private final Integer batteryTierId;
-
-    @Column(name = "capacity")
-    private final Integer capacity;
-
     @Column(name = "usage")
     private Integer usage;
 

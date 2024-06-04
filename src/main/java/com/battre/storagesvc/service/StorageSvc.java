@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class StorageSvc {
         this.storageRecRepo = storageRecRepo;
     }
 
-    public static Map<Integer, Integer> convertToStorageForAllTiersMap(List<Object[]> list) {
+    public static Map<Integer, Integer> convertToAvailStorageForAllTiersMap(List<Object[]> list) {
         return list.stream()
                 .collect(Collectors.toMap(
                         arr -> (Integer) arr[0],   // Extract the battery tier id
@@ -69,9 +70,18 @@ public class StorageSvc {
         return true;
     }
 
+    public List<List<Integer>> getStorageStats() {
+        List<Object[]> rawData = storageFacRepo.getStorageStatsForAllTiers();
+        return rawData.stream()
+                .map(array -> Arrays.stream(array)
+                        .map(obj -> (Integer) obj)
+                        .collect(Collectors.toList()))
+                .collect(Collectors.toList());
+    }
+
     private boolean checkStorage(Map<Integer, Integer> reqStorageForAllTiersMap) {
-        List<Object[]> availStorageForAllTiersList = storageFacRepo.getAvailStorageForAllTiers();
-        Map<Integer, Integer> availStorageForAllTiersMap = convertToStorageForAllTiersMap(availStorageForAllTiersList);
+        List<Object[]> storageStatsForAllTiersList = storageFacRepo.getStorageStatsForAllTiers();
+        Map<Integer, Integer> availStorageForAllTiersMap = convertToAvailStorageForAllTiersMap(storageStatsForAllTiersList);
 
         // check the avail storage space for each battery tier
         for (int tier : reqStorageForAllTiersMap.keySet()) {

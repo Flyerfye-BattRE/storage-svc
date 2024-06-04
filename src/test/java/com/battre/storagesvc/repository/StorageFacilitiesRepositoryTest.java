@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import static com.battre.storagesvc.service.StorageSvc.convertToStorageForAllTiersMap;
+import static com.battre.storagesvc.service.StorageSvc.convertToAvailStorageForAllTiersMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,13 +23,13 @@ public class StorageFacilitiesRepositoryTest {
     private StorageFacilitiesRepository storageFacRepo;
 
     @Test
-    public void testGetAvailStorageForAllTiers() {
-        List<Object[]> availStorageForAllTiersList = storageFacRepo.getAvailStorageForAllTiers();
-        Map<Integer, Integer> availStorageForAllTiersMap = convertToStorageForAllTiersMap(availStorageForAllTiersList);
+    public void testGetStorageStatsForAllTiers() {
+        List<Object[]> availStorageForAllTiersList = storageFacRepo.getStorageStatsForAllTiers();
+        Map<Integer, Integer> availStorageForAllTiersMap = convertToAvailStorageForAllTiersMap(availStorageForAllTiersList);
 
         // Verify the result
         assertEquals(3, availStorageForAllTiersMap.entrySet().size());
-        
+
         assertTrue(availStorageForAllTiersMap.containsKey(3));
         assertEquals(3, availStorageForAllTiersMap.get(3));
         assertTrue(availStorageForAllTiersMap.containsKey(6));
@@ -70,5 +70,10 @@ public class StorageFacilitiesRepositoryTest {
         // Verify the result
         int availStorage = storageFacRepo.getAvailStorageForTier(6);
         assertEquals(5, availStorage);
+    }
+
+    @Test
+    public void testDecrementStorageFacilityUsageForBatteryId() {
+        // TODO: Implement test
     }
 }
