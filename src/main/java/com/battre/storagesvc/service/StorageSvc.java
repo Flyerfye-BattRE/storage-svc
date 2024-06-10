@@ -74,7 +74,7 @@ public class StorageSvc {
         List<Object[]> rawData = storageFacRepo.getStorageStatsForAllTiers();
         return rawData.stream()
                 .map(array -> Arrays.stream(array)
-                        .map(obj -> (Integer) obj)
+                        .map(obj -> ((Number) obj).intValue())
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }
