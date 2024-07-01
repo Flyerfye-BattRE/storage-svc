@@ -14,62 +14,62 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class StorageSvcControllerTests {
-    @Mock
-    private StorageSvc storageSvc;
+  @Mock private StorageSvc storageSvc;
 
-    @Mock
-    private StreamObserver<StoreBatteryResponse> responseStoreBatteryResponse;
+  @Mock private StreamObserver<StoreBatteryResponse> responseStoreBatteryResponse;
 
-    private StorageSvcController storageSvcController;
+  private StorageSvcController storageSvcController;
 
-    private AutoCloseable closeable;
+  private AutoCloseable closeable;
 
-    @BeforeEach
-    public void openMocks() {
-        closeable = MockitoAnnotations.openMocks(this);
-        storageSvcController = new StorageSvcController(storageSvc);
-    }
+  @BeforeEach
+  public void openMocks() {
+    closeable = MockitoAnnotations.openMocks(this);
+    storageSvcController = new StorageSvcController(storageSvc);
+  }
 
-    @AfterEach
-    public void releaseMocks() throws Exception {
-        closeable.close();
-    }
+  @AfterEach
+  public void releaseMocks() throws Exception {
+    closeable.close();
+  }
 
-    @Test
-    void testTryStoreBatteriesSuccess() {
-        storageSvcController = new StorageSvcController(storageSvc);
+  @Test
+  void testTryStoreBatteriesSuccess() {
+    storageSvcController = new StorageSvcController(storageSvc);
 
-        StoreBatteryRequest request = StoreBatteryRequest.newBuilder().build();
-        when(storageSvc.checkStorageAndAttemptStore(request)).thenReturn(true);
+    StoreBatteryRequest request = StoreBatteryRequest.newBuilder().build();
+    when(storageSvc.checkStorageAndAttemptStore(request)).thenReturn(true);
 
-        storageSvcController.tryStoreBatteries(request, responseStoreBatteryResponse);
+    storageSvcController.tryStoreBatteries(request, responseStoreBatteryResponse);
 
-        verify(storageSvc).checkStorageAndAttemptStore(request);
-        verify(responseStoreBatteryResponse).onNext(StoreBatteryResponse.newBuilder().setSuccess(true).build());
-        verify(responseStoreBatteryResponse).onCompleted();
-    }
+    verify(storageSvc).checkStorageAndAttemptStore(request);
+    verify(responseStoreBatteryResponse)
+        .onNext(StoreBatteryResponse.newBuilder().setSuccess(true).build());
+    verify(responseStoreBatteryResponse).onCompleted();
+  }
 
-    @Test
-    void testTryStoreBatteriesFail() {
-        storageSvcController = new StorageSvcController(storageSvc);
+  @Test
+  void testTryStoreBatteriesFail() {
+    storageSvcController = new StorageSvcController(storageSvc);
 
-        StoreBatteryRequest request = StoreBatteryRequest.newBuilder().build();
-        when(storageSvc.checkStorageAndAttemptStore(request)).thenReturn(false);
+    StoreBatteryRequest request = StoreBatteryRequest.newBuilder().build();
+    when(storageSvc.checkStorageAndAttemptStore(request)).thenReturn(false);
 
-        storageSvcController.tryStoreBatteries(request, responseStoreBatteryResponse);
+    storageSvcController.tryStoreBatteries(request, responseStoreBatteryResponse);
 
-        verify(storageSvc).checkStorageAndAttemptStore(request);
-        verify(responseStoreBatteryResponse).onNext(StoreBatteryResponse.newBuilder().setSuccess(false).build());
-        verify(responseStoreBatteryResponse).onCompleted();
-    }
+    verify(storageSvc).checkStorageAndAttemptStore(request);
+    verify(responseStoreBatteryResponse)
+        .onNext(StoreBatteryResponse.newBuilder().setSuccess(false).build());
+    verify(responseStoreBatteryResponse).onCompleted();
+  }
 
-    @Test
-    void testRemoveStorageBattery() {
-        // TODO: Implement test
-    }
+  @Test
+  void testRemoveStorageBattery() {
+    // TODO: Implement test
+  }
 
-    @Test
-    void testGetStorageStats() {
-        // TODO: Implement test
-    }
+  @Test
+  void testGetStorageStats() {
+    // TODO: Implement test
+  }
 }

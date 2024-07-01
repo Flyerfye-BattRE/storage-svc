@@ -10,11 +10,10 @@ import com.battre.stubs.services.StoreBatteryRequest;
 import com.battre.stubs.services.StoreBatteryResponse;
 import com.battre.stubs.services.TierStats;
 import io.grpc.stub.StreamObserver;
-import net.devh.boot.grpc.server.service.GrpcService;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 import java.util.logging.Logger;
+import net.devh.boot.grpc.server.service.GrpcService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @GrpcService
 public class StorageSvcController extends StorageSvcGrpc.StorageSvcImplBase {

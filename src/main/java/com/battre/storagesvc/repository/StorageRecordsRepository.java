@@ -12,11 +12,12 @@ import java.sql.Timestamp;
 
 @Repository
 public interface StorageRecordsRepository extends JpaRepository<StorageRecordType, Integer> {
-    @Transactional
-    @Modifying
-    @Query("UPDATE StorageRecordType " +
-            "SET storageEndDate = :storageEndDate " +
-            "WHERE batteryId = :batteryId")
-    void endStorageForBatteryId(@Param("batteryId") int batteryId,
-                                @Param("storageEndDate") Timestamp storageEndDate);
+  @Transactional
+  @Modifying
+  @Query(
+      "UPDATE StorageRecordType "
+          + "SET storageEndDate = :storageEndDate "
+          + "WHERE batteryId = :batteryId")
+  void endStorageForBatteryId(
+      @Param("batteryId") int batteryId, @Param("storageEndDate") Timestamp storageEndDate);
 }

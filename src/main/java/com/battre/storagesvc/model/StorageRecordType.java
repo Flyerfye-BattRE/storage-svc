@@ -13,64 +13,66 @@ import java.time.Instant;
 @Entity
 @Table(name = "StorageRecords", schema = "StorageSvcSchema")
 public class StorageRecordType {
-    @Column(name = "storage_facility_id")
-    private final Integer storageFacilityId;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "storage_id")
-    private Long storageId;
-    @Column(name = "battery_id")
-    private Integer batteryId;
+  @Column(name = "storage_facility_id")
+  private final Integer storageFacilityId;
 
-    @Column(name = "intake_order_id")
-    private Integer intakeOrderId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "storage_id")
+  private Long storageId;
 
-    @Column(name = "storage_start_date")
-    private Timestamp storageStartDate;
+  @Column(name = "battery_id")
+  private Integer batteryId;
 
-    @Column(name = "storage_end_date")
-    private Timestamp storageEndDate;
+  @Column(name = "intake_order_id")
+  private Integer intakeOrderId;
 
-    public StorageRecordType(Integer storageFacilityId, Integer batteryId, Integer intakeOrderId) {
-        this.storageFacilityId = storageFacilityId;
-        this.batteryId = batteryId;
-        this.intakeOrderId = intakeOrderId;
-        this.storageStartDate = Timestamp.from(Instant.now());
-    }
+  @Column(name = "storage_start_date")
+  private Timestamp storageStartDate;
 
-    public Integer getStorageFacilityId() {
-        return storageFacilityId;
-    }
+  @Column(name = "storage_end_date")
+  private Timestamp storageEndDate;
 
-    public Integer getBatteryId() {
-        return batteryId;
-    }
+  public StorageRecordType(Integer storageFacilityId, Integer batteryId, Integer intakeOrderId) {
+    this.storageFacilityId = storageFacilityId;
+    this.batteryId = batteryId;
+    this.intakeOrderId = intakeOrderId;
+    this.storageStartDate = Timestamp.from(Instant.now());
+  }
 
-    public void setBatteryId(Integer batteryId) {
-        this.batteryId = batteryId;
-    }
+  public Integer getStorageFacilityId() {
+    return storageFacilityId;
+  }
 
-    public Integer getIntakeOrderId() {
-        return intakeOrderId;
-    }
+  public Integer getBatteryId() {
+    return batteryId;
+  }
 
-    public void setIntakeOrderId(Integer intakeOrderId) {
-        this.intakeOrderId = intakeOrderId;
-    }
+  public void setBatteryId(Integer batteryId) {
+    this.batteryId = batteryId;
+  }
 
-    public Timestamp getStorageStartDate() {
-        return storageStartDate;
-    }
+  public Integer getIntakeOrderId() {
+    return intakeOrderId;
+  }
 
-    public void setStorageStartDate(Timestamp StorageStartDate) {
-        this.storageStartDate = StorageStartDate;
-    }
+  public void setIntakeOrderId(Integer intakeOrderId) {
+    this.intakeOrderId = intakeOrderId;
+  }
 
-    public Timestamp getStorageEndDate() {
-        return storageEndDate;
-    }
+  public Timestamp getStorageStartDate() {
+    return storageStartDate;
+  }
 
-    public void setStorageEndDate(Timestamp StorageEndDate) {
-        this.storageEndDate = StorageEndDate;
-    }
+  public void setStorageStartDate(Timestamp StorageStartDate) {
+    this.storageStartDate = StorageStartDate;
+  }
+
+  public Timestamp getStorageEndDate() {
+    return storageEndDate;
+  }
+
+  public void setStorageEndDate(Timestamp StorageEndDate) {
+    this.storageEndDate = StorageEndDate;
+  }
 }

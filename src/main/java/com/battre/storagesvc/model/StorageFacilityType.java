@@ -10,59 +10,64 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "StorageFacilities", schema = "StorageSvcSchema")
 public class StorageFacilityType {
-    @Column(name = "location")
-    private final String location;
-    @Column(name = "battery_tier_id")
-    private final Integer batteryTierId;
-    @Column(name = "capacity")
-    private final Integer capacity;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "storage_facility_id")
-    private Long storageFacilityId;
-    @Column(name = "usage")
-    private Integer usage;
+  @Column(name = "location")
+  private final String location;
 
-    @Column(name = "notes")
-    private String notes;
+  @Column(name = "battery_tier_id")
+  private final Integer batteryTierId;
 
-    public StorageFacilityType(String location, Integer batteryTierId, Integer capacity, Integer usage, String notes) {
-        this.location = location;
-        this.batteryTierId = batteryTierId;
-        this.capacity = capacity;
-        this.usage = usage;
-        this.notes = notes;
-    }
+  @Column(name = "capacity")
+  private final Integer capacity;
 
-    public Long getStorageFacilityId() {
-        return storageFacilityId;
-    }
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "storage_facility_id")
+  private Long storageFacilityId;
 
-    public String getLocation() {
-        return location;
-    }
+  @Column(name = "usage")
+  private Integer usage;
 
-    public Integer getBatteryTierId() {
-        return batteryTierId;
-    }
+  @Column(name = "notes")
+  private String notes;
 
-    public Integer getCapacity() {
-        return capacity;
-    }
+  public StorageFacilityType(
+      String location, Integer batteryTierId, Integer capacity, Integer usage, String notes) {
+    this.location = location;
+    this.batteryTierId = batteryTierId;
+    this.capacity = capacity;
+    this.usage = usage;
+    this.notes = notes;
+  }
 
-    public Integer getUsage() {
-        return usage;
-    }
+  public Long getStorageFacilityId() {
+    return storageFacilityId;
+  }
 
-    public void setUsage(Integer usage) {
-        this.usage = usage;
-    }
+  public String getLocation() {
+    return location;
+  }
 
-    public String getNotes() {
-        return notes;
-    }
+  public Integer getBatteryTierId() {
+    return batteryTierId;
+  }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
+  public Integer getCapacity() {
+    return capacity;
+  }
+
+  public Integer getUsage() {
+    return usage;
+  }
+
+  public void setUsage(Integer usage) {
+    this.usage = usage;
+  }
+
+  public String getNotes() {
+    return notes;
+  }
+
+  public void setNotes(String notes) {
+    this.notes = notes;
+  }
 }

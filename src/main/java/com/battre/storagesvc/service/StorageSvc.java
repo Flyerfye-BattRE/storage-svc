@@ -5,10 +5,6 @@ import com.battre.storagesvc.repository.StorageFacilitiesRepository;
 import com.battre.storagesvc.repository.StorageRecordsRepository;
 import com.battre.stubs.services.BatteryStorageInfo;
 import com.battre.stubs.services.StoreBatteryRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Arrays;
@@ -17,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StorageSvc {

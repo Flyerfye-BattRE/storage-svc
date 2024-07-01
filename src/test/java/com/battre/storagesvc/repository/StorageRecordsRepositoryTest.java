@@ -10,10 +10,10 @@ import java.util.logging.Logger;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class StorageRecordsRepositoryTest {
-    private static final Logger logger = Logger.getLogger(StorageRecordsRepositoryTest.class.getName());
+  private static final Logger logger =
+      Logger.getLogger(StorageRecordsRepositoryTest.class.getName());
 
-    @Autowired
-    private StorageRecordsRepository storageRecRepo;
+  @Autowired private StorageRecordsRepository storageRecRepo;
 
-    // No repository fns => No repository tests
+  // No repository fns => No repository tests
 }

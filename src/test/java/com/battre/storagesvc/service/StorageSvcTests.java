@@ -1,25 +1,24 @@
 package com.battre.storagesvc.service;
 
-import com.battre.storagesvc.model.StorageRecordType;
-import com.battre.storagesvc.repository.StorageFacilitiesRepository;
-import com.battre.storagesvc.repository.StorageRecordsRepository;
-import com.battre.stubs.services.BatteryStorageInfo;
-import com.battre.stubs.services.StoreBatteryRequest;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import com.battre.storagesvc.model.StorageRecordType;
+import com.battre.storagesvc.repository.StorageFacilitiesRepository;
+import com.battre.storagesvc.repository.StorageRecordsRepository;
+import com.battre.stubs.services.BatteryStorageInfo;
+import com.battre.stubs.services.StoreBatteryRequest;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class StorageSvcTests {
     @Mock
