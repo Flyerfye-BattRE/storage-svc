@@ -9,6 +9,7 @@ import com.battre.stubs.services.StorageSvcGrpc;
 import com.battre.stubs.services.StoreBatteryRequest;
 import com.battre.stubs.services.StoreBatteryResponse;
 import com.battre.stubs.services.TierStats;
+import com.google.protobuf.Int32Value;
 import io.grpc.stub.StreamObserver;
 import java.util.List;
 import java.util.logging.Logger;
@@ -72,7 +73,7 @@ public class StorageSvcController extends StorageSvcGrpc.StorageSvcImplBase {
         for (List<Integer> tierStats : storageStats) {
             TierStats.Builder tierStatsBuilder = TierStats.newBuilder()
                     .setBatteryTierId(tierStats.get(0))
-                    .setAvailStorage(tierStats.get(1))
+                    .setAvailStorage(Int32Value.of(tierStats.get(1)))
                     .setCapacity(tierStats.get(2));
 
             responseBuilder.addTierStatsList(tierStatsBuilder.build());
