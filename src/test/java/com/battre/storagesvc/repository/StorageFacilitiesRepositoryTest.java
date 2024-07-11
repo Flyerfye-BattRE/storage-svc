@@ -16,63 +16,64 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class StorageFacilitiesRepositoryTest {
-    private static final Logger logger = Logger.getLogger(StorageFacilitiesRepositoryTest.class.getName());
+  private static final Logger logger =
+      Logger.getLogger(StorageFacilitiesRepositoryTest.class.getName());
 
-    @Autowired
-    private StorageFacilitiesRepository storageFacRepo;
+  @Autowired private StorageFacilitiesRepository storageFacRepo;
 
-    @Test
-    public void testGetStorageStatsForAllTiers() {
-        List<Object[]> availStorageForAllTiersList = storageFacRepo.getStorageStatsForAllTiers();
-        Map<Integer, Integer> availStorageForAllTiersMap = convertToAvailStorageForAllTiersMap(availStorageForAllTiersList);
+  @Test
+  public void testGetStorageStatsForAllTiers() {
+    List<Object[]> availStorageForAllTiersList = storageFacRepo.getStorageStatsForAllTiers();
+    Map<Integer, Integer> availStorageForAllTiersMap =
+        convertToAvailStorageForAllTiersMap(availStorageForAllTiersList);
 
-        // Verify the result
-        assertEquals(3, availStorageForAllTiersMap.entrySet().size());
+    // Verify the result
+    assertEquals(3, availStorageForAllTiersMap.entrySet().size());
 
-        assertTrue(availStorageForAllTiersMap.containsKey(3));
-        assertEquals(3, availStorageForAllTiersMap.get(3));
-        assertTrue(availStorageForAllTiersMap.containsKey(6));
-        assertEquals(4, availStorageForAllTiersMap.get(6));
-        assertTrue(availStorageForAllTiersMap.containsKey(7));
-        assertEquals(2, availStorageForAllTiersMap.get(7));
-    }
+    assertTrue(availStorageForAllTiersMap.containsKey(3));
+    assertEquals(3, availStorageForAllTiersMap.get(3));
+    assertTrue(availStorageForAllTiersMap.containsKey(6));
+    assertEquals(4, availStorageForAllTiersMap.get(6));
+    assertTrue(availStorageForAllTiersMap.containsKey(7));
+    assertEquals(2, availStorageForAllTiersMap.get(7));
+  }
 
-    @Test
-    public void testGetAvailStorageForTier() {
-        int availStorageForTier = storageFacRepo.getAvailStorageForTier(3);
+  @Test
+  public void testGetAvailStorageForTier() {
+    int availStorageForTier = storageFacRepo.getAvailStorageForTier(3);
 
-        // Verify the result
-        assertEquals(3, availStorageForTier);
-    }
+    // Verify the result
+    assertEquals(3, availStorageForTier);
+  }
 
-    @Test
-    public void testGetAvailStorageIdForTier() {
-        int availStorageId = storageFacRepo.getAvailStorageIdForTier(6);
+  @Test
+  public void testGetAvailStorageIdForTier() {
+    int availStorageId = storageFacRepo.getAvailStorageIdForTier(6);
 
-        // Verify the result
-        assertEquals(3, availStorageId);
-    }
+    // Verify the result
+    assertEquals(3, availStorageId);
+  }
 
-    @Test
-    public void testIncrementStorageFacilityUsage() {
-        storageFacRepo.incrementStorageFacilityUsage(2);
+  @Test
+  public void testIncrementStorageFacilityUsage() {
+    storageFacRepo.incrementStorageFacilityUsage(2);
 
-        // Verify the result
-        int availStorage = storageFacRepo.getAvailStorageForTier(7);
-        assertEquals(1, availStorage);
-    }
+    // Verify the result
+    int availStorage = storageFacRepo.getAvailStorageForTier(7);
+    assertEquals(1, availStorage);
+  }
 
-    @Test
-    public void testDecrementStorageFacilityUsage() {
-        storageFacRepo.decrementStorageFacilityUsage(3);
+  @Test
+  public void testDecrementStorageFacilityUsage() {
+    storageFacRepo.decrementStorageFacilityUsage(3);
 
-        // Verify the result
-        int availStorage = storageFacRepo.getAvailStorageForTier(6);
-        assertEquals(5, availStorage);
-    }
+    // Verify the result
+    int availStorage = storageFacRepo.getAvailStorageForTier(6);
+    assertEquals(5, availStorage);
+  }
 
-    @Test
-    public void testDecrementStorageFacilityUsageForBatteryId() {
-        // TODO: Implement test
-    }
+  @Test
+  public void testDecrementStorageFacilityUsageForBatteryId() {
+    // TODO: Implement test
+  }
 }

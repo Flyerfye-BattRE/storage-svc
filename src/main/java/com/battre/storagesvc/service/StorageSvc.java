@@ -19,102 +19,115 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StorageSvc {
-    private static final Logger logger = Logger.getLogger(StorageSvc.class.getName());
+  private static final Logger logger = Logger.getLogger(StorageSvc.class.getName());
 
-    private final StorageFacilitiesRepository storageFacRepo;
-    private final StorageRecordsRepository storageRecRepo;
+  private final StorageFacilitiesRepository storageFacRepo;
+  private final StorageRecordsRepository storageRecRepo;
 
-    @Autowired
-    public StorageSvc(StorageFacilitiesRepository storageFacRepo,
-                      StorageRecordsRepository storageRecRepo) {
-        this.storageFacRepo = storageFacRepo;
-        this.storageRecRepo = storageRecRepo;
-    }
+  @Autowired
+  public StorageSvc(
+      StorageFacilitiesRepository storageFacRepo, StorageRecordsRepository storageRecRepo) {
+    this.storageFacRepo = storageFacRepo;
+    this.storageRecRepo = storageRecRepo;
+  }
 
-    public static Map<Integer, Integer> convertToAvailStorageForAllTiersMap(List<Object[]> list) {
-        return list.stream()
-                .collect(Collectors.toMap(
-                        arr -> (Integer) arr[0],   // Extract the battery tier id
-                        arr -> ((Long) arr[1]).intValue()    // Extract the avail storage value
+  public static Map<Integer, Integer> convertToAvailStorageForAllTiersMap(List<Object[]> list) {
+    return list.stream()
+        .collect(
+            Collectors.toMap(
+                arr -> (Integer) arr[0], // Extract the battery tier id
+                arr -> ((Long) arr[1]).intValue() // Extract the avail storage value
                 ));
+  }
+
+  @Transactional
+  public boolean checkStorageAndAttemptStore(StoreBatteryRequest incomingRequest) {
+    Map<Integer, Integer> reqStorageForAllTiersMap =
+        calculateReqStorageForAllTiers(incomingRequest.getBatteriesList());
+    if (checkStorage(reqStorageForAllTiersMap)) {
+      // update all tiers storage space
+      for (BatteryStorageInfo battery : incomingRequest.getBatteriesList()) {
+        // find storage facility with avail capacity and lowest facility id
+        int storageFacilityId = storageFacRepo.getAvailStorageIdForTier(battery.getBatteryTier());
+        logger.info(
+            "For battery ["
+                + battery.getBatteryId()
+                + "] tier ["
+                + battery.getBatteryTier()
+                + "] => Storing in ["
+                + storageFacilityId
+                + "]");
+
+        // increase usage for that facility
+        storageFacRepo.incrementStorageFacilityUsage(storageFacilityId);
+
+        // add batteries to storage records
+        StorageRecordType storedBattery =
+            new StorageRecordType(
+                storageFacilityId, battery.getBatteryId(), incomingRequest.getOrderId());
+
+        storageRecRepo.save(storedBattery);
+      }
+    } else {
+      return false;
     }
 
-    @Transactional
-    public boolean checkStorageAndAttemptStore(StoreBatteryRequest incomingRequest) {
-        Map<Integer, Integer> reqStorageForAllTiersMap = calculateReqStorageForAllTiers(incomingRequest.getBatteriesList());
-        if (checkStorage(reqStorageForAllTiersMap)) {
-            // update all tiers storage space
-            for (BatteryStorageInfo battery : incomingRequest.getBatteriesList()) {
-                // find storage facility with avail capacity and lowest facility id
-                int storageFacilityId = storageFacRepo.getAvailStorageIdForTier(battery.getBatteryTier());
-                logger.info("For battery [" + battery.getBatteryId()
-                        + "] tier [" + battery.getBatteryTier() + "] => Storing in [" + storageFacilityId + "]");
+    return true;
+  }
 
-                // increase usage for that facility
-                storageFacRepo.incrementStorageFacilityUsage(storageFacilityId);
+  public List<List<Integer>> getStorageStats() {
+    List<Object[]> rawData = storageFacRepo.getStorageStatsForAllTiers();
+    return rawData.stream()
+        .map(
+            array ->
+                Arrays.stream(array)
+                    .map(obj -> ((Number) obj).intValue())
+                    .collect(Collectors.toList()))
+        .collect(Collectors.toList());
+  }
 
-                // add batteries to storage records
-                StorageRecordType storedBattery = new StorageRecordType(
-                        storageFacilityId,
-                        battery.getBatteryId(),
-                        incomingRequest.getOrderId()
-                );
+  private boolean checkStorage(Map<Integer, Integer> reqStorageForAllTiersMap) {
+    List<Object[]> storageStatsForAllTiersList = storageFacRepo.getStorageStatsForAllTiers();
+    Map<Integer, Integer> availStorageForAllTiersMap =
+        convertToAvailStorageForAllTiersMap(storageStatsForAllTiersList);
 
-                storageRecRepo.save(storedBattery);
-            }
-        } else {
-            return false;
-        }
-
-        return true;
+    // check the avail storage space for each battery tier
+    for (int tier : reqStorageForAllTiersMap.keySet()) {
+      // if the storage for an incoming battery tier doesn't exist or is insufficient => exception
+      if (!availStorageForAllTiersMap.containsKey(tier)
+          || availStorageForAllTiersMap.get(tier) < reqStorageForAllTiersMap.get(tier)) {
+        logger.info(
+            "Storage facilities do not contain enough space in specified battery tier ["
+                + tier
+                + "]");
+        return false;
+      }
     }
 
-    public List<List<Integer>> getStorageStats() {
-        List<Object[]> rawData = storageFacRepo.getStorageStatsForAllTiers();
-        return rawData.stream()
-                .map(array -> Arrays.stream(array)
-                        .map(obj -> ((Number) obj).intValue())
-                        .collect(Collectors.toList()))
-                .collect(Collectors.toList());
+    return true;
+  }
+
+  private Map<Integer, Integer> calculateReqStorageForAllTiers(
+      List<BatteryStorageInfo> batteryInfoList) {
+    Map<Integer, Integer> reqStorageForAllTiers = new HashMap<>();
+
+    for (BatteryStorageInfo battery : batteryInfoList) {
+      int tier = battery.getBatteryTier();
+      if (!reqStorageForAllTiers.containsKey(tier)) {
+        reqStorageForAllTiers.put(tier, 0);
+      }
+      reqStorageForAllTiers.put(tier, reqStorageForAllTiers.get(tier) + 1);
+      logger.info("Updated " + tier + " with " + reqStorageForAllTiers.get(tier));
     }
 
-    private boolean checkStorage(Map<Integer, Integer> reqStorageForAllTiersMap) {
-        List<Object[]> storageStatsForAllTiersList = storageFacRepo.getStorageStatsForAllTiers();
-        Map<Integer, Integer> availStorageForAllTiersMap = convertToAvailStorageForAllTiersMap(storageStatsForAllTiersList);
+    return reqStorageForAllTiers;
+  }
 
-        // check the avail storage space for each battery tier
-        for (int tier : reqStorageForAllTiersMap.keySet()) {
-            // if the storage for an incoming battery tier doesn't exist or is insufficient => exception
-            if (!availStorageForAllTiersMap.containsKey(tier)
-                    || availStorageForAllTiersMap.get(tier) < reqStorageForAllTiersMap.get(tier)) {
-                logger.info("Storage facilities do not contain enough space in specified battery tier [" + tier + "]");
-                return false;
-            }
-        }
+  @Transactional
+  public boolean removeBattery(int batteryId) {
+    storageFacRepo.decrementStorageFacilityUsageForBatteryId(batteryId);
+    storageRecRepo.endStorageForBatteryId(batteryId, Timestamp.from(Instant.now()));
 
-        return true;
-    }
-
-    private Map<Integer, Integer> calculateReqStorageForAllTiers(List<BatteryStorageInfo> batteryInfoList) {
-        Map<Integer, Integer> reqStorageForAllTiers = new HashMap<>();
-
-        for (BatteryStorageInfo battery : batteryInfoList) {
-            int tier = battery.getBatteryTier();
-            if (!reqStorageForAllTiers.containsKey(tier)) {
-                reqStorageForAllTiers.put(tier, 0);
-            }
-            reqStorageForAllTiers.put(tier, reqStorageForAllTiers.get(tier) + 1);
-            logger.info("Updated " + tier + " with " + reqStorageForAllTiers.get(tier));
-        }
-
-        return reqStorageForAllTiers;
-    }
-
-    @Transactional
-    public boolean removeBattery(int batteryId) {
-        storageFacRepo.decrementStorageFacilityUsageForBatteryId(batteryId);
-        storageRecRepo.endStorageForBatteryId(batteryId, Timestamp.from(Instant.now()));
-
-        return true;
-    }
+    return true;
+  }
 }

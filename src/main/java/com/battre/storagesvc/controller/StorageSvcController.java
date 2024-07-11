@@ -18,71 +18,74 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @GrpcService
 public class StorageSvcController extends StorageSvcGrpc.StorageSvcImplBase {
-    private static final Logger logger = Logger.getLogger(StorageSvcController.class.getName());
+  private static final Logger logger = Logger.getLogger(StorageSvcController.class.getName());
 
-    private final StorageSvc storageSvc;
+  private final StorageSvc storageSvc;
 
-    @Autowired
-    public StorageSvcController(StorageSvc storageSvc) {
-        this.storageSvc = storageSvc;
+  @Autowired
+  public StorageSvcController(StorageSvc storageSvc) {
+    this.storageSvc = storageSvc;
+  }
+
+  @Override
+  public void tryStoreBatteries(
+      StoreBatteryRequest request, StreamObserver<StoreBatteryResponse> responseObserver) {
+    logger.info("tryStoreBatteries() invoked");
+    logger.info("request: " + request);
+
+    boolean storageSuccess = false;
+
+    storageSuccess = storageSvc.checkStorageAndAttemptStore(request);
+    StoreBatteryResponse response =
+        StoreBatteryResponse.newBuilder().setSuccess(storageSuccess).build();
+
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+
+    logger.info("tryStoreBatteries() finished");
+  }
+
+  @Override
+  public void removeStorageBattery(
+      RemoveStorageBatteryRequest request,
+      StreamObserver<RemoveStorageBatteryResponse> responseObserver) {
+    int batteryId = request.getBatteryId();
+    logger.info("removeBattery() invoked for [" + batteryId + "]");
+
+    boolean removeBatterySuccess = false;
+
+    removeBatterySuccess = storageSvc.removeBattery(batteryId);
+    RemoveStorageBatteryResponse response =
+        RemoveStorageBatteryResponse.newBuilder().setSuccess(removeBatterySuccess).build();
+
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
+
+    logger.info("removeBattery() finished");
+  }
+
+  @Override
+  public void getStorageStats(
+      GetStorageStatsRequest request, StreamObserver<GetStorageStatsResponse> responseObserver) {
+    logger.info("getStorageStats() invoked");
+
+    List<List<Integer>> storageStats = storageSvc.getStorageStats();
+
+    GetStorageStatsResponse.Builder responseBuilder = GetStorageStatsResponse.newBuilder();
+    for (List<Integer> tierStats : storageStats) {
+      TierStats.Builder tierStatsBuilder =
+          TierStats.newBuilder()
+              .setBatteryTierId(tierStats.get(0))
+              .setAvailStorage(Int32Value.of(tierStats.get(1)))
+              .setCapacity(tierStats.get(2));
+
+      responseBuilder.addTierStatsList(tierStatsBuilder.build());
     }
 
-    @Override
-    public void tryStoreBatteries(StoreBatteryRequest request, StreamObserver<StoreBatteryResponse> responseObserver) {
-        logger.info("tryStoreBatteries() invoked");
-        logger.info("request: " + request);
+    GetStorageStatsResponse response = responseBuilder.build();
+    responseObserver.onNext(response);
+    responseObserver.onCompleted();
 
-        boolean storageSuccess = false;
-
-        storageSuccess = storageSvc.checkStorageAndAttemptStore(request);
-        StoreBatteryResponse response = StoreBatteryResponse.newBuilder()
-                .setSuccess(storageSuccess)
-                .build();
-
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
-
-        logger.info("tryStoreBatteries() finished");
-    }
-
-    @Override
-    public void removeStorageBattery(RemoveStorageBatteryRequest request, StreamObserver<RemoveStorageBatteryResponse> responseObserver) {
-        int batteryId = request.getBatteryId();
-        logger.info("removeBattery() invoked for [" + batteryId + "]");
-
-        boolean removeBatterySuccess = false;
-
-        removeBatterySuccess = storageSvc.removeBattery(batteryId);
-        RemoveStorageBatteryResponse response = RemoveStorageBatteryResponse.newBuilder()
-                .setSuccess(removeBatterySuccess)
-                .build();
-
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
-
-        logger.info("removeBattery() finished");
-    }
-
-    @Override
-    public void getStorageStats(GetStorageStatsRequest request, StreamObserver<GetStorageStatsResponse> responseObserver) {
-        logger.info("getStorageStats() invoked");
-
-        List<List<Integer>> storageStats = storageSvc.getStorageStats();
-
-        GetStorageStatsResponse.Builder responseBuilder = GetStorageStatsResponse.newBuilder();
-        for (List<Integer> tierStats : storageStats) {
-            TierStats.Builder tierStatsBuilder = TierStats.newBuilder()
-                    .setBatteryTierId(tierStats.get(0))
-                    .setAvailStorage(Int32Value.of(tierStats.get(1)))
-                    .setCapacity(tierStats.get(2));
-
-            responseBuilder.addTierStatsList(tierStatsBuilder.build());
-        }
-
-        GetStorageStatsResponse response = responseBuilder.build();
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
-
-        logger.info("getStorageStats() finished");
-    }
+    logger.info("getStorageStats() finished");
+  }
 }

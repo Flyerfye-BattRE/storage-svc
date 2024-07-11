@@ -1,5 +1,8 @@
 package com.battre.storagesvc.controller;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.battre.storagesvc.service.StorageSvc;
 import com.battre.stubs.services.StoreBatteryRequest;
 import com.battre.stubs.services.StoreBatteryResponse;
@@ -9,9 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class StorageSvcControllerTests {
   @Mock private StorageSvc storageSvc;

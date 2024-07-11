@@ -2,6 +2,9 @@ package com.battre.storagesvc.config;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import java.util.Collections;
+import java.util.Map;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -22,10 +25,6 @@ import software.amazon.awssdk.services.servicediscovery.model.RecordType;
 import software.amazon.awssdk.services.servicediscovery.model.RegisterInstanceRequest;
 import software.amazon.awssdk.services.servicediscovery.model.RegisterInstanceResponse;
 import software.amazon.awssdk.services.servicediscovery.model.ServiceSummary;
-
-import java.util.Collections;
-import java.util.Map;
-import java.util.logging.Logger;
 
 @Configuration
 @Profile({"dev", "prod"})
