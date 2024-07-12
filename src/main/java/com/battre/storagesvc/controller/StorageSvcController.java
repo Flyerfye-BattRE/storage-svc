@@ -76,7 +76,7 @@ public class StorageSvcController extends StorageSvcGrpc.StorageSvcImplBase {
       TierStats.Builder tierStatsBuilder =
           TierStats.newBuilder()
               .setBatteryTierId(tierStats.get(0))
-              .setAvailStorage(Int32Value.of(tierStats.get(1)))
+              .setUsedStorage(Int32Value.of(tierStats.get(1)))
               .setCapacity(tierStats.get(2));
 
       responseBuilder.addTierStatsList(tierStatsBuilder.build());

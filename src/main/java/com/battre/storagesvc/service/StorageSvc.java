@@ -76,7 +76,7 @@ public class StorageSvc {
   }
 
   public List<List<Integer>> getStorageStats() {
-    List<Object[]> rawData = storageFacRepo.getStorageStatsForAllTiers();
+    List<Object[]> rawData = storageFacRepo.getStorageUsageStatsForAllTiers();
     return rawData.stream()
         .map(
             array ->
