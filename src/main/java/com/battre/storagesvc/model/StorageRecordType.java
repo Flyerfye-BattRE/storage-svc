@@ -32,6 +32,10 @@ public class StorageRecordType {
   @Column(name = "storage_end_date")
   private Timestamp storageEndDate;
 
+  public StorageRecordType() {
+    storageFacilityId = -1;
+  }
+
   public StorageRecordType(Integer storageFacilityId, Integer batteryId, Integer intakeOrderId) {
     this.storageFacilityId = storageFacilityId;
     this.batteryId = batteryId;

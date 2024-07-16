@@ -1,6 +1,5 @@
 package com.battre.storagesvc.repository;
 
-import static com.battre.storagesvc.service.StorageSvc.convertToAvailStorageForAllTiersMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.stream.Collectors;
+
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class StorageFacilitiesRepositoryTest {
   private static final Logger logger =
-      Logger.getLogger(StorageFacilitiesRepositoryTest.class.getName());
+          Logger.getLogger(StorageFacilitiesRepositoryTest.class.getName());
 
   @Autowired private StorageFacilitiesRepository storageFacRepo;
 
@@ -25,7 +26,7 @@ public class StorageFacilitiesRepositoryTest {
   public void testGetStorageStatsForAllTiers() {
     List<Object[]> availStorageForAllTiersList = storageFacRepo.getStorageStatsForAllTiers();
     Map<Integer, Integer> availStorageForAllTiersMap =
-        convertToAvailStorageForAllTiersMap(availStorageForAllTiersList);
+            convertToAvailStorageForAllTiersMap(availStorageForAllTiersList);
 
     // Verify the result
     assertEquals(3, availStorageForAllTiersMap.entrySet().size());
@@ -74,6 +75,19 @@ public class StorageFacilitiesRepositoryTest {
 
   @Test
   public void testDecrementStorageFacilityUsageForBatteryId() {
-    // TODO: Implement test
+    int batteryId = 5;
+
+    storageFacRepo.decrementStorageFacilityUsageForBatteryId(batteryId);
+
+    int availStorage = storageFacRepo.getAvailStorageForTier(6);
+    assertEquals(5, availStorage);  // This value depends on the initial state of the database
+  }
+
+  private Map<Integer, Integer> convertToAvailStorageForAllTiersMap(List<Object[]> list) {
+    return list.stream()
+            .collect(Collectors.toMap(
+                    arr -> (Integer) arr[0], // Extract the battery tier id
+                    arr -> ((Long) arr[1]).intValue() // Extract the avail storage value
+            ));
   }
 }

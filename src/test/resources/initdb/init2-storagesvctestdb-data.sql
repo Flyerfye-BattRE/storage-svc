@@ -10,4 +10,14 @@ WHERE NOT EXISTS (
     SELECT 1 FROM StorageSvcSchema.StorageFacilities
 );
 
+-- Insert statements for the "StorageRecords" table
+INSERT INTO StorageSvcSchema.StorageRecords (storage_id, storage_facility_id, battery_id, intake_order_id, storage_start_date, storage_end_date)
+SELECT * FROM (VALUES
+    (1, 3, 5, 1, '2024-01-01 10:00:00', NULL),
+    (2, 2, 6, 1, '2024-01-01 10:00:00', NULL)
+) AS v (storage_id, storage_facility_id, battery_id, intake_order_id, storage_start_date, storage_end_date)
+WHERE NOT EXISTS (
+    SELECT 1 FROM StorageSvcSchema.StorageRecords
+);
+
 
