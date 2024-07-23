@@ -24,7 +24,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(properties = "grpc.server.port=9032")
 public class StorageSvcTests {
   @Mock private StorageFacilitiesRepository storageFacRepo;
   @Mock private StorageRecordsRepository storageRecRepo;
